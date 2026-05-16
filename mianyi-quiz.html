@@ -2,24 +2,32 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>免疫学题库 — A型 + X型</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#ccc;display:flex;height:100vh;overflow:hidden}
+html,body{height:100dvh;height:100vh;overflow:hidden}
+body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#ccc;display:flex;flex-direction:column}
+
 /* ── 首页 ── */
-#home{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;gap:20px}
+#home{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;flex:1;gap:20px}
 #home h1{color:#e8d5b7;font-size:28px;letter-spacing:2px;margin-bottom:8px}
-#home .sub{color:#889;font-size:14px;margin-bottom:24px}
-.mode-btn{display:block;width:320px;padding:20px 32px;border-radius:14px;cursor:pointer;text-align:center;transition:all .2s;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#ddd;font-size:17px;font-family:inherit;letter-spacing:1px}
+#home .sub{color:#889;font-size:14px;margin-bottom:24px;text-align:center;padding:0 16px}
+.mode-btn{display:block;width:320px;max-width:90vw;padding:20px 32px;border-radius:14px;cursor:pointer;text-align:center;transition:all .2s;border:2px solid rgba(255,255,255,0.1);background:rgba(255,255,255,0.04);color:#ddd;font-size:17px;font-family:inherit;letter-spacing:1px}
 .mode-btn:hover{background:rgba(255,255,255,0.08);border-color:rgba(255,255,255,0.25);transform:translateY(-2px)}
 .mode-btn strong{display:block;font-size:20px;margin-bottom:4px;color:#fff}
 .mode-btn span{font-size:13px;color:#999}
 
-/* ── 侧边栏 ── */
-#sidebar{width:210px;min-width:210px;background:rgba(0,0,0,0.3);overflow-y:auto;border-right:1px solid rgba(255,255,255,0.08);padding-bottom:20px}
+/* ── 顶部导航栏（手机端章节选择器） ── */
+#top-nav{display:none;flex-shrink:0;align-items:center;gap:8px;padding:8px 12px;background:rgba(0,0,0,0.4);border-bottom:1px solid rgba(255,255,255,0.08)}
+#top-nav select{flex:1;padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.08);color:#fff;border:1px solid rgba(255,255,255,0.15);font-size:14px;font-family:inherit;min-width:0;-webkit-appearance:none;appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23aaa' d='M6 8L1 3h10z'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px}
+#top-nav .btn-back{flex-shrink:0;padding:8px 14px;border-radius:8px;background:rgba(255,255,255,0.06);color:#ccc;border:none;font-size:13px;font-family:inherit;cursor:pointer;white-space:nowrap}
+#top-nav .btn-back:hover{background:rgba(255,255,255,0.12)}
+
+/* ── 桌面端侧边栏 ── */
+#sidebar{width:210px;min-width:210px;background:rgba(0,0,0,0.3);overflow-y:auto;border-right:1px solid rgba(255,255,255,0.08);padding-bottom:20px;flex-shrink:0;display:none}
 #sidebar h3{color:#e8d5b7;padding:14px 14px 8px;font-size:14px;letter-spacing:1px}
-.ch-link{display:block;padding:8px 14px;cursor:pointer;font-size:13px;color:#999;transition:all .15s;border-left:3px solid transparent}
+.ch-link{display:block;padding:8px 14px;cursor:pointer;font-size:13px;color:#999;transition:all .15s;border-left:3px solid transparent;user-select:none}
 .ch-link:hover{background:rgba(255,255,255,0.05);color:#ddd}
 .ch-link.active{background:rgba(92,107,192,0.2);color:#fff;border-left-color:#5c6bc0}
 .ch-link .badge{float:right;font-size:11px;color:#777}
@@ -28,15 +36,15 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#cc
 #back-home:hover{color:#7986cb}
 
 /* ── 主区域 ── */
-#main{flex:1;display:flex;flex-direction:column;overflow:hidden}
+#content-wrap{display:none;flex:1;min-height:0;overflow:hidden}
+#main{flex:1;display:none;flex-direction:column;min-height:0;overflow:hidden}
 #header{padding:14px 24px;border-bottom:1px solid rgba(255,255,255,0.06);display:flex;align-items:center;gap:12px;flex-shrink:0;flex-wrap:wrap}
 #header h2{color:#e8d5b7;font-size:19px}
-#header .stats{font-size:13px;color:#889;margin-left:auto}
-#stats-bar{display:flex;gap:12px;font-size:13px}
+#stats-bar{display:flex;gap:12px;font-size:13px;margin-left:auto}
 #stats-bar span{color:#FFD54F;font-weight:bold}
 #progress-wrap{flex-shrink:0;height:3px;background:rgba(255,255,255,0.06)}
 #progress-fill{height:100%;background:linear-gradient(90deg,#4CAF50,#8BC34A);transition:width .3s}
-#scroll{flex:1;overflow-y:auto;padding:16px 24px}
+#scroll{flex:1;overflow-y:auto;padding:16px 24px;-webkit-overflow-scrolling:touch}
 .card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:20px 22px;margin-bottom:12px}
 .q-num{display:inline-block;background:#3f51b5;color:#fff;font-size:11px;font-weight:bold;padding:2px 9px;border-radius:10px;margin-bottom:8px}
 .q-num.x-type{background:#e65100}
@@ -46,7 +54,7 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#cc
 .section-label{color:#e8d5b7;font-size:15px;margin:18px 0 10px;padding-bottom:6px;border-bottom:1px solid rgba(255,255,255,0.08)}
 .q-title{color:#e0e0e0;font-size:15px;line-height:1.6;margin-bottom:10px}
 .options{display:flex;flex-direction:column;gap:4px}
-.opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;cursor:pointer;border:2px solid transparent;background:rgba(255,255,255,0.03);font-size:14px;transition:all .15s;user-select:none}
+.opt{display:flex;align-items:center;gap:10px;padding:8px 12px;border-radius:8px;cursor:pointer;border:2px solid transparent;background:rgba(255,255,255,0.03);font-size:14px;transition:all .15s;user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
 .opt:hover{background:rgba(255,255,255,0.06);border-color:rgba(255,255,255,0.1)}
 .opt.selected{border-color:#5c6bc0;background:rgba(92,107,192,0.16);color:#fff}
 .opt.correct{border-color:#4CAF50!important;background:rgba(76,175,80,0.18)!important;color:#A5D6A7!important}
@@ -69,18 +77,23 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#cc
 .btn-reset:hover{background:rgba(255,255,255,0.12);color:#ddd}
 #feedback{font-size:14px;color:#FFD54F;margin-left:8px}
 
+/* ── 桌面端：侧边栏 + 主区域 横向排列 ── */
+@media(min-width:769px){
+  #content-wrap{flex-direction:row}
+  #sidebar{display:none}
+  #sidebar.visible{display:block}
+}
+
+/* ── 手机/小平板布局 ── */
 @media(max-width:768px){
-  body{flex-direction:column;height:100dvh;height:-webkit-fill-available}
-  #home{width:100%;padding:20px}
   #home h1{font-size:22px}
-  .mode-btn{width:100%;max-width:300px}
-  #sidebar{width:100%;min-width:0;max-height:42vh;overflow-y:auto;overflow-x:hidden;flex-shrink:0;border-right:none;border-bottom:1px solid rgba(255,255,255,0.12)}
-  #sidebar h3{font-size:13px;padding:8px 12px}
-  .ch-link{white-space:normal;border-left:none;border-bottom:1px solid rgba(255,255,255,0.05);padding:9px 12px;font-size:13px}
-  .ch-link.active{border-left-color:transparent;border-bottom-color:#5c6bc0;border-left:3px solid #5c6bc0}
-  #main{min-height:0;flex:1 1 0}
+  #top-nav{display:flex}
+  #sidebar{display:none!important}
+  #content-wrap{flex-direction:column}
+  #main{min-height:0;flex:1 1 auto}
   #header{padding:8px 12px;gap:8px}
   #header h2{font-size:15px}
+  #stats-bar{font-size:12px}
   #scroll{padding:8px;-webkit-overflow-scrolling:touch}
   #btn-row{padding:8px 12px;gap:6px}
   .btn{padding:10px 16px;font-size:13px}
@@ -106,11 +119,39 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#cc
   </button>
 </div>
 
-<!-- ── 章节模式侧边栏 ── -->
-<div id="sidebar" style="display:none">
-  <button id="back-home" onclick="goHome()">← 返回首页</button>
-  <h3>章节列表</h3>
-  <div class="ch-link" data-ch="1">第1章 绪论<span class="badge">A7+X6</span></div>
+<!-- ── 手机端顶部章节选择器 ── -->
+<div id="top-nav">
+  <button class="btn-back" onclick="goHome()">← 首页</button>
+  <select id="ch-select" onchange="onChSelectChange()">
+    <option value="1">第1章 绪论（A7+X6）</option>
+<option value="2">第2章 免疫器官的结构和功能（A11+X4）</option>
+<option value="3">第3章 抗　原（A14+X8）</option>
+<option value="4">第4章 免疫球蛋白（A31+X4）</option>
+<option value="5">第5章 补体系统（A22+X5）</option>
+<option value="6">第6章 细胞因子（A10+X7）</option>
+<option value="7">第7章 白细胞分化抗原和粘附分子（A16+X7）</option>
+<option value="8">第8章 主要组织相容性抗原（A20+X2）</option>
+<option value="9">第9章 淋巴细胞（A15+X15）</option>
+<option value="10">第10章 抗原提呈细胞及抗原提呈（A11+X7）</option>
+<option value="11">第11章 第十一、十二章  免疫应答（A38+X26）</option>
+<option value="13">第13章 特异性免疫应答的特点及其机制（A17+X10）</option>
+<option value="14">第14章 免疫应答的调节（A19+X4）</option>
+<option value="15">第15章 天然免疫（A7+X10）</option>
+<option value="16">第16章 超敏反应（A15+X12）</option>
+<option value="17">第17章 自身免疫和自身免疫性疾病（A12+X6）</option>
+<option value="18">第18章 免疫缺陷病（A10+X5）</option>
+<option value="19">第19章 移植免疫（A9+X5）</option>
+<option value="20">第20章 肿瘤免疫（A7+X5）</option>
+<option value="22">第22章 免疫学防治（A9+X4）</option>
+  </select>
+</div>
+
+<!-- ── 桌面端侧边栏 + 主区域 ── -->
+<div id="content-wrap">
+  <div id="sidebar">
+    <button id="back-home" onclick="goHome()">← 返回首页</button>
+    <h3>章节列表</h3>
+    <div class="ch-link" data-ch="1">第1章 绪论<span class="badge">A7+X6</span></div>
 <div class="ch-link" data-ch="2">第2章 免疫器官的结构和功能<span class="badge">A11+X4</span></div>
 <div class="ch-link" data-ch="3">第3章 抗　原<span class="badge">A14+X8</span></div>
 <div class="ch-link" data-ch="4">第4章 免疫球蛋白<span class="badge">A31+X4</span></div>
@@ -130,17 +171,18 @@ body{font-family:'Microsoft YaHei',Arial,sans-serif;background:#1a1a2e;color:#cc
 <div class="ch-link" data-ch="19">第19章 移植免疫<span class="badge">A9+X5</span></div>
 <div class="ch-link" data-ch="20">第20章 肿瘤免疫<span class="badge">A7+X5</span></div>
 <div class="ch-link" data-ch="22">第22章 免疫学防治<span class="badge">A9+X4</span></div>
-</div>
+  </div>
 
-<!-- ── 答题区域 ── -->
-<div id="main" style="display:none">
-  <div id="header"><h2 id="ch-title"></h2><div id="stats-bar"></div></div>
-  <div id="progress-wrap"><div id="progress-fill"></div></div>
-  <div id="scroll"><div id="questions"></div></div>
-  <div id="btn-row">
-    <button class="btn btn-submit" onclick="submitAll()">提交答案</button>
-    <button class="btn btn-reset" onclick="resetAll()">重新作答</button>
-    <span id="feedback"></span>
+  <!-- ── 答题区域 ── -->
+  <div id="main">
+    <div id="header"><h2 id="ch-title"></h2><div id="stats-bar"></div></div>
+    <div id="progress-wrap"><div id="progress-fill"></div></div>
+    <div id="scroll"><div id="questions"></div></div>
+    <div id="btn-row">
+      <button class="btn btn-submit" onclick="submitAll()">提交答案</button>
+      <button class="btn btn-reset" onclick="resetAll()">重新作答</button>
+      <span id="feedback"></span>
+    </div>
   </div>
 </div>
 
@@ -155,20 +197,45 @@ let answers = {};         // key -> optionIndex (single) or [indices] (multi)
 let submitted = false;
 
 // ── 首页 ──
-function showHome() { mode='home'; document.getElementById('home').style.display='flex'; document.getElementById('sidebar').style.display='none'; document.getElementById('main').style.display='none'; }
+function showHome() {
+  mode='home';
+  document.getElementById('home').style.display='flex';
+  document.getElementById('top-nav').style.display='none';
+  document.getElementById('content-wrap').style.display='none';
+  document.getElementById('sidebar').classList.remove('visible');
+  document.getElementById('sidebar').style.display='none';
+  document.getElementById('main').style.display='none';
+}
 function goHome() { showHome(); }
+
 function startChapterMode() {
   mode = 'chapter';
   document.getElementById('home').style.display='none';
-  document.getElementById('sidebar').style.display='block';
+  document.getElementById('content-wrap').style.display='flex';
   document.getElementById('main').style.display='flex';
-  document.querySelectorAll('.ch-link').forEach(el => el.classList.remove('active'));
+
+  const isMobile = window.innerWidth <= 768;
+  if (isMobile) {
+    document.getElementById('top-nav').style.display='flex';
+    document.getElementById('sidebar').classList.remove('visible');
+    document.getElementById('sidebar').style.display='none';
+  } else {
+    document.getElementById('top-nav').style.display='none';
+    document.getElementById('sidebar').style.display='block';
+    document.getElementById('sidebar').classList.add('visible');
+    document.querySelectorAll('.ch-link').forEach(el => el.classList.remove('active'));
+  }
+
   if (!currentCh) currentCh = CHAPTERS[0].num;
   switchChapter(currentCh);
 }
+
 function startRandomMode() {
   mode = 'random';
   document.getElementById('home').style.display='none';
+  document.getElementById('content-wrap').style.display='flex';
+  document.getElementById('top-nav').style.display='none';
+  document.getElementById('sidebar').classList.remove('visible');
   document.getElementById('sidebar').style.display='none';
   document.getElementById('main').style.display='flex';
   generateRandomQuestions();
@@ -200,7 +267,13 @@ function generateRandomQuestions() {
 // ── 章节切换 ──
 function switchChapter(chNum) {
   currentCh = chNum;
+  const isMobile = window.innerWidth <= 768;
+
+  // 更新桌面端侧边栏高亮
   document.querySelectorAll('.ch-link').forEach(el => el.classList.toggle('active', +el.dataset.ch === chNum));
+  // 更新手机端下拉框
+  document.getElementById('ch-select').value = chNum;
+
   const ch = CHAPTERS.find(c => c.num === chNum);
   answers = {};
   submitted = false;
@@ -215,27 +288,31 @@ function switchChapter(chNum) {
   document.getElementById('scroll').scrollTop = 0;
 }
 
+// ── 手机端下拉选择章节 ──
+function onChSelectChange() {
+  const val = +document.getElementById('ch-select').value;
+  if (val && val !== currentCh) switchChapter(val);
+}
+
 // ── 渲染题目列表 ──
 function renderQuestions(qs) {
   const container = document.getElementById('questions');
-  const totalAinList = qs.filter(q => q.type === 'a').length;
-  const totalXinList = qs.filter(q => q.type === 'x').length;
 
   let html = '';
   let aCount = 0, xCount = 0;
-  let inASection = false, inXSection = false;
+  let aSection = false, xSection = false;
 
   for (const q of qs) {
     const key = q.type + '-' + (q.chNum || 'r') + '-' + q.data.id;
-    if (q.type === 'a' && !inASection) {
-      if (aCount > 0 && xCount > 0) html += '<div class="section-label">第二部分：X 型题（多选题）</div>';
+    if (q.type === 'a' && !aSection) {
+      if (xCount > 0) html += '<div class="section-label">第二部分：X 型题（多选题）</div>';
       else html += '<div class="section-label">A 型题（单选题）</div>';
-      inASection = true;
+      aSection = true;
     }
-    if (q.type === 'x' && !inXSection && aCount > 0) {
-      if (inASection) html += '</div><div class="section-label" style="margin-top:8px">X 型题（多选题 · 多选才得分）</div>';
+    if (q.type === 'x' && !xSection && aCount > 0) {
+      if (aSection) html += '<div class="section-label" style="margin-top:8px">X 型题（多选题 · 多选才得分）</div>';
       else html += '<div class="section-label">X 型题（多选题 · 多选才得分）</div>';
-      inXSection = true;
+      xSection = true;
     }
 
     const isX = q.type === 'x';
@@ -245,17 +322,16 @@ function renderQuestions(qs) {
     let optStatus = [];
 
     if (isSub && isX) {
-      // X型：选中的标correct/wrong，正确的标correct
       const selSet = new Set(Array.isArray(sel) ? sel : []);
       const ansSet = new Set(ans);
-      for (let oi = 0; oi < 5; oi++) {
+      for (let oi = 0; oi < q.data.options.length; oi++) {
         if (ansSet.has(oi) && selSet.has(oi)) optStatus.push('correct');
         else if (!ansSet.has(oi) && selSet.has(oi)) optStatus.push('wrong');
-        else if (ansSet.has(oi) && !selSet.has(oi)) optStatus.push('correct'); // missed correct
+        else if (ansSet.has(oi) && !selSet.has(oi)) optStatus.push('correct');
         else optStatus.push('');
       }
     } else if (isSub && !isX) {
-      for (let oi = 0; oi < 5; oi++) {
+      for (let oi = 0; oi < q.data.options.length; oi++) {
         if (oi === ans) optStatus.push('correct');
         else if (oi === sel && sel !== ans) optStatus.push('wrong');
         else optStatus.push('');
@@ -293,12 +369,12 @@ function renderQuestions(qs) {
 
   container.innerHTML = html;
 
-  // 事件
+  // 事件绑定
   container.querySelectorAll('.opt:not(.disabled)').forEach(el => {
-    el.addEventListener('click', () => {
-      const key = el.dataset.key;
-      const oi = parseInt(el.dataset.o);
-      const isX = el.dataset.x === '1';
+    el.addEventListener('click', function() {
+      const key = this.dataset.key;
+      const oi = parseInt(this.dataset.o);
+      const isX = this.dataset.x === '1';
       if (isX) {
         if (!Array.isArray(answers[key])) answers[key] = [];
         const idx = answers[key].indexOf(oi);
@@ -383,11 +459,28 @@ function resetAll() {
 }
 
 function esc(s) { return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-function escAttr(s) { return s.replace(/"/g,'&quot;').replace(/</g,'&lt;'); }
 
-// ── 章节导航事件 ──
+// ── 桌面端章节导航事件 ──
 document.querySelectorAll('.ch-link').forEach(el => {
   el.addEventListener('click', () => switchChapter(+el.dataset.ch));
+});
+
+// ── 窗口大小变化时调整 ──
+window.addEventListener('resize', () => {
+  if (mode === 'chapter') {
+    const isMobile = window.innerWidth <= 768;
+    const sidebar = document.getElementById('sidebar');
+    const topNav = document.getElementById('top-nav');
+    if (isMobile) {
+      topNav.style.display = 'flex';
+      sidebar.classList.remove('visible');
+      sidebar.style.display = 'none';
+    } else {
+      topNav.style.display = 'none';
+      sidebar.style.display = 'block';
+      sidebar.classList.add('visible');
+    }
+  }
 });
 
 showHome();

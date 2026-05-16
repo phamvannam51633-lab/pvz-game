@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1章 概论 — A型题题库</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+  min-height: 100vh;
+  font-family: 'Microsoft YaHei', Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  padding: 30px 20px;
+}
+.container { max-width: 780px; width: 100%; }
+
+h1 {
+  text-align: center;
+  color: #e8d5b7;
+  font-size: 26px;
+  margin-bottom: 6px;
+  letter-spacing: 2px;
+}
+.subtitle {
+  text-align: center;
+  color: #8899aa;
+  font-size: 13px;
+  margin-bottom: 24px;
+}
+
+/* 进度条 */
+.progress-bar {
+  background: rgba(255,255,255,0.08);
+  border-radius: 8px;
+  height: 6px;
+  margin-bottom: 24px;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 8px;
+  transition: width 0.4s ease;
+}
+
+.card {
+  background: rgba(255,255,255,0.04);
+  border: 1px solid rgba(255,255,255,0.10);
+  border-radius: 14px;
+  padding: 28px 30px;
+  margin-bottom: 16px;
+  backdrop-filter: blur(10px);
+  transition: all 0.25s;
+}
+.card:hover { border-color: rgba(255,255,255,0.18); }
+
+.q-num {
+  display: inline-block;
+  background: #3f51b5;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 3px 10px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.q-title {
+  color: #e8e8e8;
+  font-size: 17px;
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.options { display: flex; flex-direction: column; gap: 8px; }
+
+.opt {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 11px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: rgba(255,255,255,0.04);
+  color: #c0c0c0;
+  font-size: 15px;
+  transition: all 0.2s;
+  user-select: none;
+}
+.opt:hover {
+  background: rgba(255,255,255,0.08);
+  border-color: rgba(255,255,255,0.15);
+}
+.opt.selected {
+  border-color: #5c6bc0;
+  background: rgba(92,107,192,0.18);
+  color: #fff;
+}
+.opt.correct {
+  border-color: #4CAF50 !important;
+  background: rgba(76,175,80,0.20) !important;
+  color: #A5D6A7 !important;
+}
+.opt.wrong {
+  border-color: #f44336 !important;
+  background: rgba(244,67,54,0.18) !important;
+  color: #EF9A9A !important;
+}
+.opt.disabled { pointer-events: none; opacity: 0.7; }
+.opt.disabled.correct, .opt.disabled.wrong { opacity: 1; }
+
+.opt-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.08);
+  font-weight: bold;
+  font-size: 14px;
+  flex-shrink: 0;
+}
+.opt.selected .opt-label { background: #5c6bc0; }
+.opt.correct .opt-label { background: #4CAF50; }
+.opt.wrong .opt-label { background: #f44336; }
+
+.result-tag {
+  margin-left: auto;
+  font-size: 18px;
+  display: none;
+}
+.opt.correct .result-tag, .opt.wrong .result-tag { display: inline; }
+
+/* 按钮 */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  margin-top: 24px;
+  flex-wrap: wrap;
+}
+.btn {
+  padding: 12px 32px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: bold;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-family: inherit;
+  letter-spacing: 1px;
+}
+.btn-submit { background: #3f51b5; color: #fff; }
+.btn-submit:hover { background: #5c6bc0; transform: translateY(-1px); }
+.btn-reset { background: rgba(255,255,255,0.08); color: #aaa; }
+.btn-reset:hover { background: rgba(255,255,255,0.14); color: #ddd; }
+
+.score-box {
+  text-align: center;
+  margin-top: 18px;
+  color: #ccc;
+  font-size: 14px;
+}
+.score-box strong { color: #FFD54F; font-size: 20px; }
+
+.feedback {
+  text-align: center;
+  margin-top: 10px;
+  font-size: 14px;
+  min-height: 20px;
+  transition: all 0.3s;
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📖 第一章 概论</h1>
+  <p class="subtitle">A 型题（单项选择题）· 共 7 题</p>
+  <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
+  <div id="questions"></div>
+  <div class="btn-row">
+    <button class="btn btn-submit" onclick="submitAll()">✅ 提交答案</button>
+    <button class="btn btn-reset" onclick="resetAll()">🔄 重新作答</button>
+  </div>
+  <div class="score-box" id="scoreBox"></div>
+  <div class="feedback" id="feedback"></div>
+</div>
+
+<script>
+const QUIZ = [
+  {
+    id: 1,
+    title: "免疫的概念是：",
+    options: [
+      "A. 机体排除病原微生物的功能",
+      "B. 机体清除自身衰老、死亡细胞的功能",
+      "C. 机体抗感染的防御功能",
+      "D. 机体免疫系统识别和排除抗原性异物的功能",
+      "E. 机体清除自身突变细胞的功能"
+    ],
+    answer: 3
+  },
+  {
+    id: 2,
+    title: "首先使用人痘预防天花的是：",
+    options: [
+      "A. 法国人",
+      "B. 中国人",
+      "C. 英国人",
+      "D. 希腊人",
+      "E. 印度人"
+    ],
+    answer: 1
+  },
+  {
+    id: 3,
+    title: "免疫对机体是：",
+    options: [
+      "A. 有害的",
+      "B. 有利的",
+      "C. 有利也有害",
+      "D. 有利无害",
+      "E. 正常条件下有利，异常条件下有害"
+    ],
+    answer: 4
+  },
+  {
+    id: 4,
+    title: "免疫监视功能低下的机体易发生：",
+    options: [
+      "A. 肿瘤",
+      "B. 超敏反应",
+      "C. 移植排斥反应",
+      "D. 免疫耐受",
+      "E. 自身免疫病"
+    ],
+    answer: 0
+  },
+  {
+    id: 5,
+    title: "免疫防御功能低下的机体易发生：",
+    options: [
+      "A. 肿瘤",
+      "B. 超敏反应",
+      "C. 移植排斥反应",
+      "D. 反复感染",
+      "E. 免疫增生病"
+    ],
+    answer: 3
+  },
+  {
+    id: 6,
+    title: "机体抵抗病原微生物感染的功能称为：",
+    options: [
+      "A. 免疫监视",
+      "B. 免疫自稳",
+      "C. 免疫耐受",
+      "D. 免疫防御",
+      "E. 免疫识别"
+    ],
+    answer: 3
+  },
+  {
+    id: 7,
+    title: "机体免疫系统识别和清除突变的细胞的功能称为：",
+    options: [
+      "A. 免疫监视",
+      "B. 免疫自稳",
+      "C. 免疫耐受",
+      "D. 免疫防御",
+      "E. 免疫识别"
+    ],
+    answer: 0
+  }
+];
+
+const answers = QUIZ.map(() => -1); // selected indices
+let submitted = false;
+
+function render() {
+  const container = document.getElementById('questions');
+  container.innerHTML = QUIZ.map((q, qi) => {
+    const selected = answers[qi];
+    const isCorrect = answers[qi] === q.answer;
+    const optStatus = submitted
+      ? q.options.map((_, oi) => {
+          if (oi === q.answer) return 'correct';
+          if (oi === selected && selected !== q.answer) return 'wrong';
+          return '';
+        })
+      : q.options.map(() => '');
+
+    return `<div class="card">
+      <span class="q-num">第 ${qi + 1} 题</span>
+      <div class="q-title">${q.title}</div>
+      <div class="options">
+        ${q.options.map((opt, oi) => {
+          let cls = 'opt';
+          if (!submitted && selected === oi) cls += ' selected';
+          if (submitted && optStatus[oi]) cls += ' ' + optStatus[oi];
+          if (submitted) cls += ' disabled';
+          const tag = optStatus[oi] === 'correct' ? '✅' : optStatus[oi] === 'wrong' ? '❌' : '';
+          return `<div class="${cls}" data-q="${qi}" data-o="${oi}">
+            <span class="opt-label">${String.fromCharCode(65 + oi)}</span>
+            <span>${opt.slice(3)}</span>
+            <span class="result-tag">${tag}</span>
+          </div>`;
+        }).join('')}
+      </div>
+    </div>`;
+  }).join('');
+
+  // 事件委托
+  container.querySelectorAll('.opt:not(.disabled)').forEach(el => {
+    el.addEventListener('click', () => {
+      if (submitted) return;
+      const qi = parseInt(el.dataset.q);
+      const oi = parseInt(el.dataset.o);
+      answers[qi] = oi;
+      render();
+      updateProgress();
+    });
+  });
+
+  updateProgress();
+}
+
+function updateProgress() {
+  const answered = answers.filter(a => a >= 0).length;
+  const pct = Math.round((answered / QUIZ.length) * 100);
+  document.getElementById('progress').style.width = pct + '%';
+}
+
+function submitAll() {
+  if (submitted) return;
+  submitted = true;
+  render();
+
+  const correct = answers.filter((a, i) => a === QUIZ[i].answer).length;
+  const total = QUIZ.length;
+  const pct = Math.round((correct / total) * 100);
+
+  const box = document.getElementById('scoreBox');
+  const fb = document.getElementById('feedback');
+
+  box.innerHTML = `得分：<strong>${correct}</strong> / ${total}（正确率 ${pct}%）`;
+
+  if (pct === 100) fb.style.color = '#A5D6A7';
+  else if (pct >= 60) fb.style.color = '#FFD54F';
+  else fb.style.color = '#EF9A9A';
+
+  fb.textContent = pct === 100 ? '🎉 全部正确，太棒了！'
+    : pct >= 80 ? '👍 做得不错！'
+    : pct >= 60 ? '📚 还需加强复习哦。'
+    : '💪 继续努力，多看几遍吧！';
+}
+
+function resetAll() {
+  for (let i = 0; i < answers.length; i++) answers[i] = -1;
+  submitted = false;
+  document.getElementById('scoreBox').innerHTML = '';
+  document.getElementById('feedback').textContent = '';
+  render();
+}
+
+render();
+</script>
+</body>
+</html>
